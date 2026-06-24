@@ -1,6 +1,6 @@
 # Databricks notebook source
 storage_account_name = "stdatapipelineadam"
-storage_account_key = "YOUR_STORAGE_KEY_HERE"
+storage_account_key = "STORAGE_KEY"
 
 spark.conf.set(
     "fs.azure.account.key." + storage_account_name + ".dfs.core.windows.net",
