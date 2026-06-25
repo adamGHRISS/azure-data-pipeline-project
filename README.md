@@ -19,22 +19,22 @@ GitHub (SalesData.csv)
               ▼                         ▼
 ┌─────────────────────────────────────────────────────┐
 │         Azure Data Lake Storage Gen2                │
-│  ┌──────────┐  ┌──────────┐  ┌──────────────────┐  │
-│  │  Bronze  │  │  Silver  │  │       Gold       │  │
-│  │ Raw CSV  │  │ Cleaned  │  │   Star Schema    │  │
-│  │          │  │  Delta   │  │     Delta        │  │
-│  └──────────┘  └──────────┘  └──────────────────┘  │
+│  ┌──────────┐  ┌──────────┐  ┌──────────────────┐   │
+│  │  Bronze  │  │  Silver  │  │       Gold       │   │
+│  │ Raw CSV  │  │ Cleaned  │  │   Star Schema    │   │
+│  │          │  │  Delta   │  │     Delta        │   │
+│  └──────────┘  └──────────┘  └──────────────────┘   │
 └─────────────────────────────────────────────────────┘
               │                         │
               ▼                         ▼
 ┌─────────────────────┐   ┌─────────────────────────┐
-│   Azure SQL DB      │   │  Azure Databricks        │
-│  - sales table      │   │  - Bronze → Silver       │
-│  - watermark table  │   │  - Silver → Gold         │
-│  - CDC stored proc  │   │  - Star schema modeling  │
+│   Azure SQL DB      │   │  Azure Databricks       │
+│  - sales table      │   │  - Bronze → Silver      │
+│  - watermark table  │   │  - Silver → Gold        │
+│  - CDC stored proc  │   │  - Star schema modeling │
 └─────────────────────┘   └────────────┬────────────┘
-                                        │
-                                        ▼
+                                       │
+                                       ▼
                           ┌─────────────────────────┐
                           │  Databricks Dashboard   │
                           │  - Revenue by Product   │
@@ -185,9 +185,8 @@ Built using PySpark + matplotlib on top of the Gold layer:
 | Storage Account (ADLS Gen2) | `stdatapipelineadam` | France Central |
 | Azure SQL Database | `sql-sales-db` | France Central |
 | Azure Data Factory | `adf-data-pipeline-adam` | France Central |
-| Azure Databricks | `dbw-data-pipeline-adam` | North Europe |
+| Azure Databricks | `dbw-data-pipeline-adam` | France Central |
 
-> Note: Databricks was deployed in North Europe due to VM capacity constraints in France Central on the free trial.
 
 ### Steps
 1. Create all Azure resources listed above
@@ -198,11 +197,6 @@ Built using PySpark + matplotlib on top of the Gold layer:
 6. In Databricks, set storage account key in cluster **Spark config** (Advanced settings)
 7. Run notebooks in order: `01` → `02` → `03` → `04`
 
-### Important: Secrets Management
-Never hardcode credentials in notebooks or commit them to GitHub:
-- Store ADLS access key in Databricks cluster **Spark config** only
-- ADF credentials managed via Azure linked service authentication
-- Rotate keys immediately if accidentally exposed
 
 ---
 
@@ -218,12 +212,4 @@ Never hardcode credentials in notebooks or commit them to GitHub:
 - **CI/CD**: ADF pipelines version-controlled via GitHub integration
 - **Cost management**: Budget alerts + auto-terminating Databricks cluster
 
----
 
-## Source Data
-
-Car sales dataset from [RihabFekii's Azure Databricks End-to-End Project](https://github.com/RihabFekii/azure-databricks-end-to-end-project)
-
-- 1,849 rows of car sales transactions
-- Columns: Branch, Dealer, Model, Revenue, Units Sold, Date, Product
-- Years covered: 2017–2020
